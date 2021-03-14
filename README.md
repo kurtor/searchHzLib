@@ -1,17 +1,19 @@
-searchHzLib-书单爬虫【杭州图书馆馆藏信息】并输出
+searchHzLib-书单爬虫【杭州图书馆馆藏信息】
 =======
 
 
 
-根据给定的【书单txt文件】，爬虫查询杭州图书馆馆藏信息，并输出为详细的表格文件，最后一列为yes代表可借
+输入：书单（txt文件）
 
-涉及：python，request_html，pyppeteer，代理池
+输出：杭州图书馆馆藏信息和书籍图片（输出为json格式文件和versionImg图片文件夹）
+
+【涉及】python，request_html，pyppeteer，代理池
+
+【作用】作为图书项目中后端的导入数据
 
 
 
 ###  准备工作
-
-
 
 - 1.安装python的Anaconda环境
 
@@ -27,7 +29,7 @@ searchHzLib-书单爬虫【杭州图书馆馆藏信息】并输出
   pip install requests_html
   ```
 
-  【注意】调用requests_html的render时，会有问题，需要如下操作：
+  【注意】调用requests_html的render时，可能会有问题，需要如下操作：
 
   ```
   找到以下源码位置：
@@ -62,21 +64,35 @@ searchHzLib-书单爬虫【杭州图书馆馆藏信息】并输出
 
 默认使用代理爬虫，需要自己本地构建代理池。
 
-（也可以不用，只要把useProxy变量改为False即可）
+（也可以不用，只要把入口文件rb_spyder.py中useProxy变量改为False即可）
 
 
 
 构建来源参考：https://github.com/jhao104/proxy_pool
 
-以下几点注意：
-1.需要低版本python3.5运行,创建虚拟环境
+构建后获取代理：http://127.0.0.1:5010/get/
+
+
+
+【注意】如果访问后无法获取到代理，那可能需要低版本python3.5
+1.创建虚拟环境
 
 ```
 conda create -n py35 python=3.5
 ```
-2.需要依赖lxml包
+2.进入proxy_pool目录找到requirements.txt，打开删掉lxml和redis相关的两行
+
+3.激活虚拟环境，安装依赖
+
+```
+【安装】先activate py35切换到环境，再cd到下载文件所在目录
+pip install -r requirements.txt
+```
+
+4.自行安装依赖lxml
 
 打开https://www.lfd.uci.edu/~gohlke/pythonlibs/，
+
 网页内搜索lxml，下载为虚拟环境python3.5准备的lxml包
 
 ```
@@ -84,21 +100,30 @@ conda create -n py35 python=3.5
 pip install ./lxml-4.4.3-cp35-cp35m-win_amd64.whl
 ```
 
-3.需要依赖windows版本的redis
+5.自行安装redis
 
-打开https://github.com/microsoftarchive/redis/releases
+打开https://github.com/microsoftarchive/redis/releases ，
+
 下载msi包安装redis，注意官网无win版本
 
 
 
 ###  运行
 
-1.如果配了代理池，把proxy_pool文件夹放到根目录下，点击proxy_pool_open.bat自动用py35环境运行
+1.如果配了代理池，先手动开启
 
-2.配置书单，文件是douban.txt（书名一行一个，用《》括起来）
-
-3.运行activate.bat开始爬虫（默认一本书最多爬3页，可通过endPage变量更改，结果输出到根目录下）
+（也可把proxy_pool文件夹放到根目录下，点击proxy_pool_open.bat脚本自动用py35环境运行）
 
 
+
+2.配置书单，文件是douban.txt
+
+书名一行一个，格式参考：《书名》作者名 
+
+（作者名也可省略，外国作者只写后半部分的姓）
+
+
+
+3.运行activate.bat脚本开始爬虫（默认一本书最多爬3页，可通过endPage变量更改，结果输出到根目录下）
 
 【如果anaconda装在个人用户下，替换脚本在文件夹内，拿出来替换掉外面的】
